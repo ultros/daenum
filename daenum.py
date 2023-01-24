@@ -2,7 +2,7 @@ import subprocess
 import openai
 
 
-def enumerate_service(service_name):
+def get_description(service_name):
     openai.api_key = ""
 
     response = openai.Completion.create(
@@ -17,18 +17,18 @@ def enumerate_service(service_name):
     return response["choices"][0]['text']
 
 
-def show_services():
+def enumerate_services():
     command = ["service", "--status-all"]
     process = subprocess.run(command, stdout=subprocess.PIPE, stderr=None)
     data = process.stdout.decode().splitlines()
     for proc in data:
         item = proc.replace("[ - ]", '')
         item = item.replace("[ + ]", '').strip()
-        print(f"{item} - {enumerate_service(item).strip()}\n")
+        print(f"{item} - {get_description(item).strip()}\n")
 
 
 def main():
-    show_services()
+    enumerate_services()
 
 
 if __name__ == '__main__':
